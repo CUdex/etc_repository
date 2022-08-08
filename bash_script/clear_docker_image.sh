@@ -8,15 +8,23 @@ read -p "do you want ignore day(ex. 0728) : "  REVISION_DAY
 if [ "$TYPE" = "1" ]
 then
 	TYPE=CLOUD
-else
+elif [ "$TYPE" = "2" ]
 	TYPE=DKNS
+else
+	echo "invalid input type please which select 1 or 2"
+	exit 100
 fi
 
 if [ "$BRANCH" = "1" ]
 then
 	BRANCH=R
-else
+elif [ "$BRANCH" = "2" ]
 	BRANCH=B
+elif [ "$BRANCH" = "3" ]
+	BRANCH=C
+else
+	echo "invalid input Branch please which select 1 or 2, 3"
+	exit 100
 fi
 
 IMAGES=$(docker images | grep $TYPE |grep -E -v "${BRANCH}.*${REVISION_DAY}" | awk '{print $3}')
