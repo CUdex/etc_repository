@@ -1,0 +1,10 @@
+---
+
+- hosts: center
+  gather_facts: no
+  vars:
+          check_msg: "{{ lookup('file', '/tmp/test2.txt') }}"
+  tasks:
+          - name: check msg
+            debug:
+                    msg: "check this msg : {{ check_msg }}"

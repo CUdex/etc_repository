@@ -1,0 +1,13 @@
+---
+- hosts: center
+  become: yes
+  gather_facts: no
+  tasks:
+          - name: send deb file
+            copy:
+                    src: "/tmp/NAC-UBUNTU-C-88750-5.0.33.0820.deb"
+                    dest: "/tmp/NAC-UBUNTU-C-88750-5.0.33.0820.deb"
+
+          - name: geniup start
+            shell: "/usr/geni/geniup -cdf /tmp/NAC-UBUNTU-C-88750-5.0.33.0820.deb"
+

@@ -1,0 +1,12 @@
+---
+- hosts: center
+  become: yes
+  gather_facts: no
+  vars:
+          userid: admin123
+  tasks:
+          - name: delete user
+            user:
+                    name: "{{ userid }}"
+                    state: absent
+                    remove: yes

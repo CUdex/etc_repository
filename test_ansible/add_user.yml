@@ -1,0 +1,16 @@
+---
+- hosts: center
+  gather_facts: no
+  vars:
+          userid: admin123
+  tasks:
+          - name: ping
+            ping:
+
+          - name: create user
+            become: yes
+            user:
+                    name: "{{userid}}"
+                    passowrd: "{{ 'Asdfg123!' | password_hash('sha256') }}"
+                    update_password: on_create
+                    group: admin

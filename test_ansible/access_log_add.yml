@@ -1,0 +1,25 @@
+---
+- hosts: center
+  gather_facts: no
+  become: yes
+  serial: 1
+  vars:
+          config_text: "#CustomLog /disk/data/logs/apache2/access_log combined"
+
+  vars_prompt:
+          - name: service_name
+            prompt: which service would you like to change?
+            default: "apache2"
+            private: no
+
+  tasks:
+          - name: remove sharp
+            replace:
+                    path: /usr/geni/conf.base/apache2/apache2.conf.sample
+                    regexp: "{{ config_text }}"
+                    replace: "CustomLog /disk/data/logs/apache2/access_log combined"
+
+          - name: service restart
+            service:
+                    name: "{{ service_name }}"
+                    state: restarted 

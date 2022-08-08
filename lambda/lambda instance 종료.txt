@@ -1,0 +1,46 @@
+import boto3
+import datetime
+
+region = 'ap-northeast-2'
+ec2 = boto3.client('ec2', region_name=region)
+
+def lambda_handler(event, context):
+    
+    temp = ec2.describe_instances()
+    #NO_AUTO_STOP true 인스턴스 id 저장
+    instanceTag = []
+    #list에 종료할 인스턴스 id 저장
+    stop_instances = []
+    
+    try:
+        for data in temp['Reservations']:
+            for printout in data['Instances']:
+                stop_instances.append(printout['InstanceId'])
+        
+        # 모든 EC2 인스턴스 태그 조회
+        response = ec2.describe_tags(
+            Filters=[
+                {
+                    'Name': 'resource-type',
+                    'Values': ['instance']
+                }
+            ]
+        )
+		
+        # NO_AUTO_STOP 태그 값이 enable인 인스턴스 id 조회
+        for tag in response['Tags']:
+            if tag['Key'] == "NO_AUTO_STOP" and tag['Value'].lower() == "enable":
+                instanceTag.append(tag['ResourceId'])
+        
+        #인스턴스들 중 NO_AUTO_STOP 태그가 enable인 인스턴스 제거
+        stop_instances = list(set(stop_instances) - set(instanceTag))
+        
+        #stop EC2
+        if stop_instances:
+            ec2.stop_instances(InstanceIds=stop_instances)
+            print('stopped instances: ' + str(stop_instances))
+        else:
+            print("have no EC2 instance to shut down")
+        
+    except Exception as e:
+        print (e)

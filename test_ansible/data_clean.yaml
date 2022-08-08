@@ -1,0 +1,16 @@
+---
+- hosts: center
+  become: yes
+  serial: 1
+  gather_facts: no
+  tasks:
+          - name: show disk
+            shell: "df -h | grep sda1 | awk '{print $5}' | sed 's/%//'"
+            register: data_use
+
+          - name: data remove
+            file:
+                    path: /home/user/test2
+                    state: absent
+            when: data_use > 2
+

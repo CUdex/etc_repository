@@ -1,0 +1,11 @@
+---
+- hosts: center
+  gather_facts: no
+  become: yes
+  tasks:
+          - name: remove cluster
+            lineinfile:
+                    path: /disk/sys/conf/local2.conf
+                    regexp: "^h5."
+                    state: absent
+

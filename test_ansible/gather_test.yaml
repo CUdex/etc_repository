@@ -1,0 +1,8 @@
+---
+- hosts: center
+  gather_facts: yes
+  become: yes
+  tasks:
+          - name: ip address
+            debug:
+                    msg: "{{ ansible_bond0.features.highdma }}"

@@ -1,0 +1,40 @@
+---
+- hosts: center
+  become: yes
+  gather_facts: no
+  serial: 1
+  tasks:
+          - name: remove cluster-peers
+            lineinfile:
+                    path: /disk/sys/conf/local.conf
+                    regexp: "log-server_cluster-peers="
+                    state: absent
+
+          - name: add config
+            lineinfile:
+                    path: /disk/sys/conf/local.conf
+                    insertafter: "log-server_cluster-name=GENIAN"
+                    line: "log-server_cluster-peers=172.30.100.200,172.30.100.201"
+            register: result_config
+            notify:
+                    - ping_pong
+
+          - name: reboot
+            shell: "sleep 3 && shutdown -r now"
+            when:  result_config.changed  == "true"
+
+            async: 1
+            poll: 0
+
+          - name: wait_for_the_machine
+            wait_for_connection:
+                    connection_timeout: 60
+                    sleep: 5
+                    delay: 5
+                    timeout: 300
+            when: result_config.changed == "true"
+
+  handlers:
+          - name: ping_pong
+            ping:
+
