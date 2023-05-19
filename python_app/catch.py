@@ -6,7 +6,6 @@ from datetime import date, timedelta
 import boto3
 from botocore.config import Config
 
-
 message = """새로운 채용 공고 확인
 """
 newline = "\n"
