@@ -32,7 +32,7 @@ if [ ! $list_length -eq 1 ]; then
 	bigger_number=`echo $finalized_version | awk -F'-' '{print $4}'`
 
 	for item in ${matches[@]:1:$list_length}; do
-		number=`echo $item | awk -F'-' '{print $4}'`
+		num=`echo $item | awk -F'-' '{print $4}'`
 		if [[ $num -gt $bigger_number ]]; then
 			bigger_number=$num
 			finalized_version=$item
